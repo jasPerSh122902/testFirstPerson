@@ -16,7 +16,11 @@ ATestPlayer::ATestPlayer()
 	PrimaryActorTick.bCanEverTick = true;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-
+	GetCapsuleComponent()->Activate(false);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+	//GetCapsuleComponent()->SetEnableGravity(false);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic,ECollisionResponse::ECR_Ignore);
+	//GetCapsuleComponent()->SetCollisionResponseToChannels(ECollisionResponse::ECR_Ignore);
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -47,7 +51,7 @@ void ATestPlayer::OnFire()
 	FVector SpawnLocation = ((MeshA != nullptr) ? MeshA->GetComponentLocation() : GetActorLocation());
 	// Set Spawn Collision Handling Override
 	FActorSpawnParameters ActorSpawnParams;
-	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
 	ActorSpawnParams.Owner = this;
 	// spawn the projectile at the muzzle
 	World->SpawnActor<ABulletActor>(SpawnLocation, SpawnRotation, ActorSpawnParams);
@@ -57,7 +61,7 @@ void ATestPlayer::OnFire()
 void ATestPlayer::OnFireRay()
 {
 	//TraceComp->GetTraceBullet(100,FColor::Orange,false,1.5f,0,5.0f);
-	TraceComp->DoTrace(GetActorLocation(), FindComponentByClass<UCameraComponent>()->GetComponentRotation(), GetWorld());
+	TraceComp->DoTrace(GetActorLocation(),FindComponentByClass<UCameraComponent>()->GetComponentRotation(), GetWorld());
 
 }
 

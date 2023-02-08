@@ -51,6 +51,7 @@ void ABulletActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "Overlap End");
 			//GEngine->ClearOnScreenDebugMessages();
+			
 		}
 	}
 
@@ -69,17 +70,21 @@ void ABulletActor::MakeCollision()
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Circle"));
 	// Set the radius
 	Collision->InitSphereRadius(5.0f);
-	Collision->BodyInstance.SetCollisionProfileName("Projectile");
+	Collision->BodyInstance.SetCollisionProfileName("Trigger");
 	// Makes it so it has collision
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &ABulletActor::OnOverLapBegin);
 	Collision->OnComponentEndOverlap.AddDynamic(this, &ABulletActor::OnOverlapEnd);
 	// Makes player unable to walk on object
 	Collision->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	Collision->CanCharacterStepUpOn = ECB_No;
+
+	//Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_MAX, ECollisionResponse::ECR_Ignore);
+	Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,ECollisionResponse::ECR_Ignore);
+	Collision->SetGenerateOverlapEvents(true);
 	// Makes the root comp to the collider
 	RootComponent = Collision;
-
 }
+
 
 void ABulletActor::MakeMovement()
 {

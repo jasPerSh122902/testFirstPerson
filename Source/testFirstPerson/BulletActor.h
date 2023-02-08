@@ -15,7 +15,7 @@ class TESTFIRSTPERSON_API ABulletActor : public AActor
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, Category = Collider)
+	UPROPERTY(EditAnywhere, Category = Collider)
 		USphereComponent* Collision;
 	UPROPERTY(EditAnywhere, Category = Mesh)
 		UStaticMeshComponent* MeshA;
