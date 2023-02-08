@@ -36,7 +36,6 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 	tempLocation = FVector(tempLocation.X + (tempRotation.Vector().X * 100), tempLocation.Y + (tempRotation.Vector().Y * 100), tempLocation.Z + (tempRotation.Vector().Z * 100));
 	// the start will increate by; the rotation
 	// will make the ray be at a agle around the center of the screen
-	 //tempEndLocation = tempLocation * (tempRotation.Vector() * 100000);
 	tempEndLocation = tempLocation + (tempRotation.Vector() * 100000);
 	// Makes a hit result
 	FHitResult hit;
@@ -44,8 +43,8 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 	// Makes a trace 
 	// retruns true if the trace hit
 	// else return false
-	bool Traced = currentWorld->LineTraceSingleByChannel(hit, tempLocation, tempEndLocation, ECC_PhysicsBody, FCollisionQueryParams(), FCollisionResponseParams());
-	// Is the size of the bullet that i spawn
+	bool Traced = currentWorld->LineTraceSingleByChannel(hit, tempLocation, tempEndLocation,ECollisionChannel::ECC_WorldDynamic, FCollisionQueryParams(), FCollisionResponseParams::FCollisionResponseParams());
+	// call the function to make debug line
 	GetTraceBullet(100, FColor::Orange, false, 1.5f, 0, 5.0f, currentWorld, tempLocation, tempEndLocation, tempRotation);
 
 	/// <summary>
@@ -61,11 +60,10 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 		FRotator hitrotation;
 		// Set the rotator 
 		hitrotation.Vector().Set(30000.f, 30.f, 300.f);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, "Traced value" + hit.GetActor()->GetFName().ToString());
 		// Makes the hit actor rotate
-		hit.GetActor()->SetActorRelativeRotation(hitrotation * 9, false, &hit, ETeleportType::ResetPhysics);
+		hit.GetActor()->SetActorRelativeRotation((hitrotation) * 9, true, &hit, ETeleportType::TeleportPhysics);
+		previousRotation = hitrotation;
 	}
-
 }
 
 // Called every frame
@@ -80,8 +78,8 @@ void UTraceComponent::GetTraceBullet(float multiplyLength, FColor color, bool li
 {
 	// Prinst the message to the log
 	UE_LOG(LogTemp, Warning, TEXT("Sending ray Trace"))
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "Trace End");
 		// Is the lines end
 		// Draws the line at the current location to the end
 		DrawDebugLine(currentWorld, location, endLocation, color, false, lifeTime, proity, thickness);
 }
-

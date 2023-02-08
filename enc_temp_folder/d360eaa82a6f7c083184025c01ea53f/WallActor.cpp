@@ -3,7 +3,9 @@
 
 #include "WallActor.h"
 #include <Components/BoxComponent.h>
+#include <testFirstPerson/BulletActor.h>
 
+#include <GameFramework/ProjectileMovementComponent.h>
 // Sets default values
 AWallActor::AWallActor()
 {
@@ -14,8 +16,10 @@ AWallActor::AWallActor()
 	m_Collision->BodyInstance.SetCollisionProfileName("Trigger");
 	m_Collision->OnComponentBeginOverlap.AddDynamic(this, &AWallActor::OnOverLapBegin);
 	m_Collision->OnComponentEndOverlap.AddDynamic(this, &AWallActor::OnOverlapEnd);
-
+	m_Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	m_Collision->SetupAttachment(RootComponent);
+	m_Collision->SetGenerateOverlapEvents(true);
+	UpdateOverlapsMethodDuringLevelStreaming;
 	// Object 1
 	meshA = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Box"));
 	meshA->CastShadow = false;
@@ -42,9 +46,12 @@ void AWallActor::Tick(float DeltaTime)
 
 void AWallActor::OnOverLapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if ((OtherActor != this) && (OtherActor != nullptr))
+	{
+		
+	}
 }
 
 void AWallActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 }
-

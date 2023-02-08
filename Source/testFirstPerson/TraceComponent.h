@@ -23,6 +23,7 @@ public:
 		float LifeTime = 1.5f, EndMultiply = 100, Thichness = 5.0f;
 	UPROPERTY(Editanywhere)
 		int DepthPirority = 0;
+	FRotator previousRotation;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

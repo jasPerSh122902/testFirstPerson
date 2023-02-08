@@ -16,11 +16,10 @@ ATestPlayer::ATestPlayer()
 	PrimaryActorTick.bCanEverTick = true;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-	GetCapsuleComponent()->Activate(false);
+	// Makes the triggers work
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
-	//GetCapsuleComponent()->SetEnableGravity(false);
+	// Makes collision ignore on the worldDynamic
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic,ECollisionResponse::ECR_Ignore);
-	//GetCapsuleComponent()->SetCollisionResponseToChannels(ECollisionResponse::ECR_Ignore);
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -31,6 +30,7 @@ ATestPlayer::ATestPlayer()
 	CameraComponent->SetRelativeLocation(CamLocation); // Position the camera
 	CameraComponent->bUsePawnControlRotation = true;
 
+	TraceComp = CreateDefaultSubobject<UTraceComponent>(TEXT("Trace"));
 }
 
 // Called when the game starts or when spawned
@@ -60,30 +60,26 @@ void ATestPlayer::OnFire()
 
 void ATestPlayer::OnFireRay()
 {
-	//TraceComp->GetTraceBullet(100,FColor::Orange,false,1.5f,0,5.0f);
-	TraceComp->DoTrace(GetActorLocation(),FindComponentByClass<UCameraComponent>()->GetComponentRotation(), GetWorld());
-
+	if(TraceComp != nullptr)
+		TraceComp->DoTrace(GetActorLocation(),FindComponentByClass<UCameraComponent>()->GetComponentRotation(), GetWorld());
 }
 
 void ATestPlayer::MoveX(float value)
 {
 	if (value != 0.0f)// Add movement in that direction
 		AddMovementInput(GetActorRightVector(), value);
-
 }
 
 void ATestPlayer::MoveY(float value)
 {
 	if (value != 0.0f)// Add movement in that direction
 		AddMovementInput(GetActorForwardVector(), value);
-
 }
 
 // Called every frame
 void ATestPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -114,6 +110,4 @@ void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	/// <param name="PlayerInputComponent"></param>
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-
 }
-

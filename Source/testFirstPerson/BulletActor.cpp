@@ -34,7 +34,7 @@ void ABulletActor::OnOverLapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 			// Gets the direction Vector
 			FVector direction = (startLocation - targetLocation);
 			// This is for ricishay off of a object.
-			if (FVector::DotProduct(targetLocation, startLocation) <= 1)
+			if (FVector::DotProduct(targetLocation, startLocation) <= 0.8f)
 				Movement->AddForce(-targetForward * (direction.Normalize() * (BounceOff * 300000)));
 			else
 				Movement->AddForce((direction.Normalize() * (BounceOff * 3000)));
@@ -78,8 +78,9 @@ void ABulletActor::MakeCollision()
 	Collision->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	Collision->CanCharacterStepUpOn = ECB_No;
 
-	//Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_MAX, ECollisionResponse::ECR_Ignore);
+	// Makes the collision not trigger on pawns
 	Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,ECollisionResponse::ECR_Ignore);
+	// Allow triggers to work
 	Collision->SetGenerateOverlapEvents(true);
 	// Makes the root comp to the collider
 	RootComponent = Collision;
@@ -98,7 +99,7 @@ void ABulletActor::MakeMovement()
 	Movement->bRotationFollowsVelocity = true;
 	// Allows for bounce
 	Movement->bShouldBounce = true;
-
+	Movement->Bounciness = 0.3f;
 }
 
 void ABulletActor::MakeMesh()
