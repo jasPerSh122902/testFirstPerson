@@ -3,7 +3,7 @@
 
 #include "TraceComponent.h"
 #include "DrawDebugHelpers.h"
-
+#include <testFirstPerson/WallActor.h>
 // Sets default values for this component's properties
 UTraceComponent::UTraceComponent()
 {
@@ -38,14 +38,15 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 	// will make the ray be at a agle around the center of the screen
 	tempEndLocation = tempLocation + (tempRotation.Vector() * 100000);
 	// Makes a hit result
-	FHitResult hit;
+	 FHitResult hit;
 
 	// Makes a trace 
 	// retruns true if the trace hit
 	// else return false
-	bool Traced = currentWorld->LineTraceSingleByChannel(hit, tempLocation, tempEndLocation,ECollisionChannel::ECC_WorldDynamic, FCollisionQueryParams(), FCollisionResponseParams::FCollisionResponseParams());
+	bool Traced = currentWorld->LineTraceSingleByChannel(hit,tempLocation, tempEndLocation,ECollisionChannel::ECC_WorldDynamic, FCollisionQueryParams(), FCollisionResponseParams::FCollisionResponseParams());
 	// call the function to make debug line
 	GetTraceBullet(100, FColor::Orange, false, 1.5f, 0, 5.0f, currentWorld, tempLocation, tempEndLocation, tempRotation);
+
 
 	/// <summary>
 	/// Is the on collision call
@@ -55,15 +56,15 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 		// if the actor hit is player
 		if (hit.GetActor()->GetFName() == "SelfMadePlayer_0")
 			return;//return
-
 		// Make a Frotator
 		FRotator hitrotation;
 		// Set the rotator 
-		hitrotation.Vector().Set(30000.f, 30.f, 300.f);
+		hitrotation.Vector().Set(30.f, 30.f, 30.f);
 		// Makes the hit actor rotate
-		hit.GetActor()->SetActorRelativeRotation((hitrotation) * 9, true, &hit, ETeleportType::TeleportPhysics);
+		hit.GetActor()->SetActorRelativeRotation((hitrotation + previousRotation) , true, &hit, ETeleportType::TeleportPhysics);
 		previousRotation = hitrotation;
 	}
+	Traced = false;
 }
 
 // Called every frame
@@ -78,7 +79,6 @@ void UTraceComponent::GetTraceBullet(float multiplyLength, FColor color, bool li
 {
 	// Prinst the message to the log
 	UE_LOG(LogTemp, Warning, TEXT("Sending ray Trace"))
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "Trace End");
 		// Is the lines end
 		// Draws the line at the current location to the end
 		DrawDebugLine(currentWorld, location, endLocation, color, false, lifeTime, proity, thickness);

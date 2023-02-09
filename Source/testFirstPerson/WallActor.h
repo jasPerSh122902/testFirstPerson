@@ -25,6 +25,7 @@ class TESTFIRSTPERSON_API AWallActor : public AActor
 	UPROPERTY(EditAnywhere, Category = Bounce)
 		FVector BounceOff = FVector(0, 10, 10);
 	FVector posistion;
+
 public:	
 	// Sets default values for this actor's properties
 	AWallActor();
