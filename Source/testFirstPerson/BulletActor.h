@@ -9,20 +9,27 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
+//class UNiagaraSystem;
+//class USoundBase;
 
 UCLASS()
 class TESTFIRSTPERSON_API ABulletActor : public AActor
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = Collider)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 		USphereComponent* Collision;
-	UPROPERTY(EditAnywhere, Category = Mesh)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 		UStaticMeshComponent* MeshA;
-	UPROPERTY(EditAnywhere, Category = Movement)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 		UProjectileMovementComponent* Movement;
-	UPROPERTY(EditAnywhere, Category = Bounce)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 		FVector BounceOff = FVector(100, 100, 100);
+public:
+	//UPROPERTY(EditDefaultsOnly, Category = "Bullet")
+		//UNiagaraSystem* nijaraSystem;
+	//UPROPERTY(EditDefaultsOnly, Category = "Bullet")
+		//USoundBase* Sound;
 
 	FVector startLocation;
 public:

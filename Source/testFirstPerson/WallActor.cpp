@@ -14,9 +14,9 @@ AWallActor::AWallActor()
 	m_Collision->OnComponentBeginOverlap.AddDynamic(this, &AWallActor::OnOverLapBegin);
 	m_Collision->OnComponentEndOverlap.AddDynamic(this, &AWallActor::OnOverlapEnd);
 	m_Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	m_Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_MAX, ECollisionResponse::ECR_Overlap);
 	m_Collision->SetupAttachment(RootComponent);
 	m_Collision->SetGenerateOverlapEvents(true);
-	UpdateOverlapsMethodDuringLevelStreaming;
 	// Object 1
 	meshA = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Box"));
 	meshA->CastShadow = false;
@@ -38,7 +38,6 @@ void AWallActor::BeginPlay()
 void AWallActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AWallActor::OnOverLapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

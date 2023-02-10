@@ -8,6 +8,7 @@
 #include <testFirstPerson/TestPlayer.h>
 #include <Kismet/GameplayStatics.h>
 #include <Engine/World.h>
+//#include "NiagaraFunctionLibrary.h"
 // Sets default values
 ABulletActor::ABulletActor()
 {
@@ -24,15 +25,28 @@ ABulletActor::ABulletActor()
 
 void ABulletActor::OnOverLapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
 	if ((OtherActor != this) && (OtherActor->GetFName() != "SelfMadePlayer_0") && (OtherActor != nullptr))
 	{
 		if (OtherActor != GetOwner())
 		{
+			
 			// Get the larget location
 			FVector targetForward = OtherActor->GetActorForwardVector();
 			FVector targetLocation = OtherActor->GetActorLocation();
+			FVector currentLocation = MeshA->GetComponentLocation();
 			// Gets the direction Vector
 			FVector direction = (startLocation - targetLocation);
+			//if (nijaraSystem)
+			//{
+			//	// particle effects
+			//	//UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), nijaraSystem, currentLocation);
+			//}
+			//if (Sound)
+			//{
+			//	// Sound
+			//	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, currentLocation);
+			//}
 			// This is for ricishay off of a object.
 			if (FVector::DotProduct(targetLocation, startLocation) <= 0.8f)
 				Movement->AddForce(-targetForward * (direction.Normalize() * (BounceOff * 300000)));
@@ -49,8 +63,7 @@ void ABulletActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	{
 		if (OtherActor != GetOwner())
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "Overlap End");
-			//GEngine->ClearOnScreenDebugMessages();
+			
 			
 		}
 	}

@@ -46,8 +46,6 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 	bool Traced = currentWorld->LineTraceSingleByChannel(hit,tempLocation, tempEndLocation,ECollisionChannel::ECC_WorldDynamic, FCollisionQueryParams(), FCollisionResponseParams::FCollisionResponseParams());
 	// call the function to make debug line
 	GetTraceBullet(100, FColor::Orange, false, 1.5f, 0, 5.0f, currentWorld, tempLocation, tempEndLocation, tempRotation);
-
-
 	/// <summary>
 	/// Is the on collision call
 	/// </summary>
@@ -59,9 +57,10 @@ void UTraceComponent::DoTrace(FVector location, FRotator rotation, UWorld* curre
 		// Make a Frotator
 		FRotator hitrotation;
 		// Set the rotator 
-		hitrotation.Vector().Set(30.f, 30.f, 30.f);
+		FQuat quat;
+		quat.Rotator().Vector().Set(30.f, 30.f, 30.f);
 		// Makes the hit actor rotate
-		hit.GetActor()->SetActorRelativeRotation((hitrotation + previousRotation) , true, &hit, ETeleportType::TeleportPhysics);
+		hit.GetActor()->AddActorLocalRotation(quat,true,&hit,ETeleportType::TeleportPhysics);
 		previousRotation = hitrotation;
 	}
 	Traced = false;
